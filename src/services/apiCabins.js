@@ -16,23 +16,35 @@ export async function deleteCabin(id) {
   return error;
 }
 
-export async function createCabin(newCabin) {
+//use this function for both create and update a cabin
+export async function createEditCabin(newCabin, id) {
+  console.log(newCabin, id);
   //https://xqolfzuvdojuevzgizxx.supabase.co/storage/v1/object/public/cabin-images//cabin-001.jpg
+  const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
   const imageName = `${Math.random()}-${newCabin.image.name}`.replaceAll(
     "/",
     ""
   );
-  const imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images//${imageName}`;
-  //1. first create the cabin
-  const { data, error } = await supabase
-    .from("cabins")
-    .insert([{ ...newCabin, image: imagePath }]);
+  const imagePath = hasImagePath
+    ? newCabin.image
+    : `${supabaseUrl}/storage/v1/object/public/cabin-images//${imageName}`;
+
+  //1. first create/edit the cabin
+  let query = supabase.from("cabins");
+
+  //Create cabin
+  if (!id) query = query.insert([{ ...newCabin, image: imagePath }]);
+
+  //Edit cabin
+  if (id) query = query.update({ ...newCabin, image: imagePath }).eq("id", id);
+
+  const { data, error } = await query.select().single();
 
   if (error) {
     throw new Error(`Cabin could not be created!`);
   }
 
-  // 2.then upload image into supabase bucket storage
+  // 2.then upload image into supabase bucket storage in create mode
   const { error: storageError } = await supabase.storage
     .from("cabin-images")
     .upload(imageName, newCabin.image);
@@ -46,14 +58,4 @@ export async function createCabin(newCabin) {
   }
 
   return data;
-}
-
-export async function updateCabin(newCabin) {
-  const { data, error } = await supabase
-    .from("cabins")
-    .insert([newCabin])
-    .select();
-
-  if (error) {
-  }
 }

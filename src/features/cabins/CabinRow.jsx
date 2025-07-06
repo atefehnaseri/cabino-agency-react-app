@@ -1,9 +1,13 @@
+import { useState } from "react";
 import styled from "styled-components";
+import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { HiTrash } from "react-icons/hi2";
+
+import { HiPencil, HiTrash } from "react-icons/hi2";
 import { formatCurrency } from "../../utils/helpers";
 import { deleteCabin } from "../../services/apiCabins";
-import toast from "react-hot-toast";
+import CreateCabinForm from "./CreateCabinForm";
+import { useDeleteCabin } from "./useDeleteCabin";
 
 const TableRow = styled.div`
   display: grid;
@@ -45,8 +49,7 @@ const Discount = styled.div`
 `;
 
 function CabinRow({ cabin }) {
-  const queryClient = useQueryClient();
-
+  const [showForm, setShowForm] = useState(false);
   const {
     id: cabinId,
     name,
@@ -55,18 +58,7 @@ function CabinRow({ cabin }) {
     discount,
     image,
   } = cabin;
-
-  const { isPending: isDeleting, mutate } = useMutation({
-    mutationFn: deleteCabin,
-    onSuccess: () => {
-      toast.success(`Cabin ${name} deleted successfully!`);
-      //refetch data and invalidating cache
-      queryClient.invalidateQueries({ queryKey: ["cabins"] });
-    },
-    onError: (error) => {
-      toast.error(`Error on deleting cabin: ${error.message}`);
-    },
-  });
+  const { isDeleting, deleteCabin } = useDeleteCabin(name);
   return (
     <>
       <TableRow role="row">
@@ -82,16 +74,16 @@ function CabinRow({ cabin }) {
         <div>
           {/* <button disabled={isCreating} onClick={handleDuplicate}>
             <HiSquare2Stack />
-          </button>
+          </button> */}
           <button onClick={() => setShowForm((show) => !show)}>
             <HiPencil />
-          </button> */}
-          <button onClick={() => mutate(cabinId)} disabled={isDeleting}>
+          </button>
+          <button onClick={() => deleteCabin(cabinId)} disabled={isDeleting}>
             <HiTrash />
           </button>
         </div>
       </TableRow>
-      {/* {showForm && <CreateCabinForm cabinToEdit={cabin} />} */}
+      {showForm && <CreateCabinForm cabinToEdit={cabin} />}
     </>
   );
 }
