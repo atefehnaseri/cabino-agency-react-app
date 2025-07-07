@@ -1,4 +1,4 @@
-import supabase from "./supabase";
+import supabase from "./supabaseClient";
 
 export async function getSettings() {
   const { data, error } = await supabase.from("settings").select("*").single();
@@ -21,7 +21,7 @@ export async function updateSetting(newSetting) {
 
   if (error) {
     console.error(error);
-    throw new Error("Settings could not be updated");
+    throw new Error("Setting could not be updated");
   }
   return data;
 }
