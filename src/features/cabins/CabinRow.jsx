@@ -6,6 +6,7 @@ import CreateCabinForm from "./CreateCabinForm";
 import { useDeleteCabin } from "./useDeleteCabin";
 import { useCreateCabin } from "./useCreateCabin";
 import Modal from "../../ui/Modal";
+import ConfirmDelete from "../../ui/ConfirmDelete";
 
 const TableRow = styled.div`
   display: grid;
@@ -88,8 +89,8 @@ function CabinRow({ cabin }) {
             <HiSquare2Stack />
           </button>
 
-          {/* edit cabin modal by clicking on edit button */}
           <Modal>
+            {/* edit cabin modal by clicking on edit button */}
             <Modal.Opener opens="edit-cabin">
               <button>
                 <HiPencil />
@@ -98,11 +99,21 @@ function CabinRow({ cabin }) {
             <Modal.Window name="edit-cabin">
               <CreateCabinForm cabinToEdit={cabin} />
             </Modal.Window>
-          </Modal>
 
-          <button onClick={() => deleteCabin(cabinId)} disabled={isDeleting}>
-            <HiTrash />
-          </button>
+            {/* delete confirmation modal */}
+            <Modal.Opener opens="delete-cabin">
+              <button>
+                <HiTrash />
+              </button>
+            </Modal.Opener>
+            <Modal.Window name="delete-cabin">
+              <ConfirmDelete
+                resourceName={`cabin ${name}`}
+                onConfirm={() => deleteCabin(cabinId)}
+                disabled={isDeleting}
+              />
+            </Modal.Window>
+          </Modal>
         </div>
       </TableRow>
     </>
