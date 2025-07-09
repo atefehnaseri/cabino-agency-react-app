@@ -26,7 +26,18 @@ function CreateCabinForm({ cabinToEdit = {}, handleCloseForm }) {
   function onSubmit(data) {
     //the file input will return an array containing file details
     const image = typeof data.image === "string" ? data.image : data.image[0];
-    if (isEditMode) editCabin({ newCabinData: { ...data, image }, id: editId });
+    //edit mode
+    if (isEditMode)
+      editCabin(
+        { newCabinData: { ...data, image }, id: editId },
+        {
+          onSuccess: (data) => {
+            reset();
+            handleCloseForm?.();
+          },
+        }
+      );
+    //create mode
     else
       createCabin(
         { ...data, image },
