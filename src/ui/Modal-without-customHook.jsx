@@ -1,8 +1,14 @@
-import { cloneElement, createContext, useContext, useState } from "react";
+import {
+  cloneElement,
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { HiXMark } from "react-icons/hi2";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
-import { useOutsideClick } from "../hooks/useOutsideClick";
 
 const StyledModal = styled.div`
   position: fixed;
@@ -84,7 +90,26 @@ function Opener({ children, opens: opensWindowName }) {
 
 function Window({ children, name }) {
   const { openModalName, onClose } = useContext(ModalContext);
-  const { modalWindowRef } = useOutsideClick(onClose);
+  const modalWindowRef = useRef();
+
+  //close modal when click outside the modal window
+  useEffect(() => {
+    function handleClick(e) {
+      if (
+        modalWindowRef.current &&
+        !modalWindowRef.current.contains(e.target)
+      ) {
+        onClose();
+        modalWindowRef.current = null;
+      }
+    }
+    //handling event in capturing phase to move down event in DOM tree
+    document.addEventListener("click", handleClick, true);
+    return () => {
+      document.removeEventListener("click", handleClick, true);
+    };
+  }, [onClose, openModalName]);
+
   if (name !== openModalName) return null;
 
   return createPortal(
