@@ -90,17 +90,14 @@ function Opener({ children, opens: opensWindowName }) {
 
 function Window({ children, name }) {
   const { openModalName, onClose } = useContext(ModalContext);
-  const modalWindowRef = useRef();
+  const ref = useRef();
 
   //close modal when click outside the modal window
   useEffect(() => {
     function handleClick(e) {
-      if (
-        modalWindowRef.current &&
-        !modalWindowRef.current.contains(e.target)
-      ) {
+      if (ref.current && !ref.current.contains(e.target)) {
         onClose();
-        modalWindowRef.current = null;
+        ref.current = null;
       }
     }
     //handling event in capturing phase to move down event in DOM tree
@@ -114,7 +111,7 @@ function Window({ children, name }) {
 
   return createPortal(
     <Overlay>
-      <StyledModal ref={modalWindowRef}>
+      <StyledModal ref={ref}>
         <Button onClick={onClose}>
           <HiXMark />
         </Button>

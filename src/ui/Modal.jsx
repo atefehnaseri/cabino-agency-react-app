@@ -84,12 +84,12 @@ function Opener({ children, opens: opensWindowName }) {
 
 function Window({ children, name }) {
   const { openModalName, onClose } = useContext(ModalContext);
-  const { modalWindowRef } = useOutsideClick(onClose);
+  const { ref } = useOutsideClick(onClose);
   if (name !== openModalName) return null;
 
   return createPortal(
     <Overlay>
-      <StyledModal ref={modalWindowRef}>
+      <StyledModal ref={ref}>
         <Button onClick={onClose}>
           <HiXMark />
         </Button>

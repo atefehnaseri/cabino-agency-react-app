@@ -1,17 +1,14 @@
 import { useEffect, useRef } from "react";
 
 export function useOutsideClick(handler, listenCapturing = true) {
-  const modalWindowRef = useRef();
+  const ref = useRef();
 
   //close modal when click outside the modal window
   useEffect(() => {
     function handleClick(e) {
-      if (
-        modalWindowRef.current &&
-        !modalWindowRef.current.contains(e.target)
-      ) {
+      if (ref.current && !ref.current.contains(e.target)) {
         handler();
-        modalWindowRef.current = null;
+        ref.current = null;
       }
     }
     //handling event in capturing phase to move down event in DOM tree
@@ -21,5 +18,5 @@ export function useOutsideClick(handler, listenCapturing = true) {
     };
   }, [handler, listenCapturing]);
 
-  return { modalWindowRef };
+  return { ref };
 }

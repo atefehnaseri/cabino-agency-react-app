@@ -90,46 +90,48 @@ function CabinRow({ cabin }) {
         ) : (
           <span>&mdash;</span>
         )}
-
-        {/* action menu column */}
         <div>
+          <button disabled={isCreating} onClick={handleDuplicate}>
+            <HiSquare2Stack />
+          </button>
+
           <Modal>
-            {/* reusable menu compound component */}
-            <Menus.MenuWrapper>
-              <Menus.Toggler id={cabinId} icon={<HiEllipsisVertical />} />
-              <Menus.MenuItems id={cabinId}>
-                <Menus.Button
-                  icon={<HiSquare2Stack />}
-                  onClick={handleDuplicate}
-                  disabled={isCreating}
-                >
-                  Duplicate
-                </Menus.Button>
+            {/* edit cabin modal by clicking on edit button */}
+            <Modal.Opener opens="edit-cabin">
+              <button>
+                <HiPencil />
+              </button>
+            </Modal.Opener>
+            <Modal.Window name="edit-cabin">
+              <CreateCabinForm cabinToEdit={cabin} />
+            </Modal.Window>
 
-                {/* edit cabin modal by clicking on edit action button in menuItem */}
-                <Modal.Opener opens="edit-cabin">
-                  <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
-                </Modal.Opener>
-
-                {/* delete cabin modal by clicking on delete action button in menuItem */}
-                <Modal.Opener opens="delete-cabin">
-                  <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
-                </Modal.Opener>
-              </Menus.MenuItems>
-
-              <Modal.Window name="edit-cabin">
-                <CreateCabinForm cabinToEdit={cabin} />
-              </Modal.Window>
-
-              <Modal.Window name="delete-cabin">
-                <ConfirmDelete
-                  resourceName={`cabin ${name}`}
-                  onConfirm={() => deleteCabin(cabinId)}
-                  disabled={isDeleting}
-                />
-              </Modal.Window>
-            </Menus.MenuWrapper>
+            {/* delete confirmation modal */}
+            <Modal.Opener opens="delete-cabin">
+              <button>
+                <HiTrash />
+              </button>
+            </Modal.Opener>
+            <Modal.Window name="delete-cabin">
+              <ConfirmDelete
+                resourceName={`cabin ${name}`}
+                onConfirm={() => deleteCabin(cabinId)}
+                disabled={isDeleting}
+              />
+            </Modal.Window>
           </Modal>
+
+          {/* reusable menu compound component */}
+          <Menus.MenuWrapper>
+            <Menus.Toggler id={cabinId} icon={<HiEllipsisVertical />} />
+            <Menus.MenuItems id={cabinId}>
+              <Menus.Button icon={<HiSquare2Stack />} onClick={handleDuplicate}>
+                Duplicate
+              </Menus.Button>
+              <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
+              <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
+            </Menus.MenuItems>
+          </Menus.MenuWrapper>
         </div>
       </TableRow>
     </>

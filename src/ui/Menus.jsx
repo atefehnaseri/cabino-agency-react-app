@@ -1,6 +1,9 @@
+import { useState, createContext, useContext } from "react";
+import { createPortal } from "react-dom";
 import styled from "styled-components";
+import { useOutsideClick } from "../hooks/useOutsideClick";
 
-const StyledMenu = styled.div`
+const Menu = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -29,7 +32,7 @@ const StyledList = styled.ul`
   position: fixed;
 
   background-color: var(--color-grey-0);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
   border-radius: var(--border-radius-md);
 
   right: ${(props) => props.position.x}px;
@@ -60,3 +63,80 @@ const StyledButton = styled.button`
     transition: all 0.3s;
   }
 `;
+
+const MenuContext = createContext();
+
+function Menus({ children }) {
+  const [openId, setOpenId] = useState("");
+  const [position, setPosition] = useState({});
+
+  const closeMenu = () => setOpenId("");
+  const openMenu = setOpenId;
+
+  return (
+    <MenuContext.Provider
+      value={{ openId, closeMenu, openMenu, position, setPosition }}
+    >
+      {children}
+    </MenuContext.Provider>
+  );
+}
+
+function MenuWrapper({ children }) {
+  return <Menu>{children}</Menu>;
+}
+
+function Toggler({ icon, id }) {
+  const { openId, openMenu, closeMenu, setPosition } = useContext(MenuContext);
+
+  function handleToggleMenu(e) {
+    //get menuItems container position according to the position of toggler button
+    const togglerBtnRect = e.target.closest("button").getBoundingClientRect();
+
+    const menuItemsPosition = {
+      x: window.innerWidth - togglerBtnRect.width - togglerBtnRect.x,
+      y: togglerBtnRect.height + togglerBtnRect.y + 8,
+    };
+    setPosition(menuItemsPosition);
+
+    openId === "" || openId !== id ? openMenu(id) : closeMenu();
+  }
+
+  return <StyledToggle onClick={handleToggleMenu}>{icon}</StyledToggle>;
+}
+
+function MenuItems({ children, id }) {
+  const { openId, closeMenu, position } = useContext(MenuContext);
+  const { ref } = useOutsideClick(closeMenu);
+
+  if (openId !== id) return null;
+
+  return createPortal(
+    <StyledList position={position} ref={ref}>
+      {children}
+    </StyledList>,
+    document.body
+  );
+}
+
+function Button({ children, icon, onClick }) {
+  const { closeMenu } = useContext(MenuContext);
+
+  function handleClickMenuItem() {
+    onClick?.();
+    closeMenu();
+  }
+
+  return (
+    <StyledButton onClick={handleClickMenuItem}>
+      {icon} <span>{children}</span>
+    </StyledButton>
+  );
+}
+
+Menus.MenuWrapper = MenuWrapper;
+Menus.Toggler = Toggler;
+Menus.MenuItems = MenuItems;
+Menus.Button = Button;
+
+export default Menus;
