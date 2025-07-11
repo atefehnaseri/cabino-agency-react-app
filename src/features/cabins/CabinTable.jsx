@@ -9,14 +9,23 @@ function CabinTable() {
   const { isLoading, cabins } = useCabins();
 
   const [searchParams] = useSearchParams();
+
+  //filter
   const filterBy = searchParams.get("discount") || "all";
   let filteredCabinsData;
-
   if (filterBy === "all") filteredCabinsData = cabins;
   if (filterBy === "no-discount")
     filteredCabinsData = cabins?.filter((item) => item.discount === 0);
   if (filterBy === "with-discount")
     filteredCabinsData = cabins?.filter((item) => item.discount > 0);
+
+  //sort
+  const sortBy = searchParams.get("sortBy") || "startDate-asc";
+  const [field, direction] = sortBy.split("-");
+  const modifier = direction === "asc" ? 1 : -1;
+  const sortedCabins = filteredCabinsData?.sort(
+    (a, b) => (a[field] - b[field]) * modifier
+  );
 
   if (isLoading) return <Spinner />;
 
