@@ -29,7 +29,7 @@ function CabinTable() {
     (a, b) => (a[field] - b[field]) * modifier
   );
 
-  if (!cabins.length) return <Empty resourceName="cabins" />;
+  if (!cabins?.length) return <Empty resourceName="cabins" />;
 
   if (isLoading) return <Spinner />;
 
