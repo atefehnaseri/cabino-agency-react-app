@@ -106,28 +106,28 @@ function BookingRow({
             See details
           </Menus.Button>
 
-          {/* {status === "unconfirmed" && (
+          {status === "unconfirmed" && (
             <Menus.Button
               icon={<HiArrowDownOnSquare />}
               onClick={() => navigate(`/checkin/${bookingId}`)}
             >
               Check in
             </Menus.Button>
-          )} */}
+          )}
 
           {/* {status === "checked-in" && (
-              <Menus.Button
-                icon={<HiArrowUpOnSquare />}
-                onClick={() => checkout(bookingId)}
-                disabled={isCheckingOut}
-              >
-                Check out
-              </Menus.Button>
-            )}
+            <Menus.Button
+              icon={<HiArrowUpOnSquare />}
+              onClick={() => checkout(bookingId)}
+              disabled={isCheckingOut}
+            >
+              Check out
+            </Menus.Button>
+          )}
 
-            <Modal.Open opens="delete">
-              <Menus.Button icon={<HiTrash />}>Delete booking</Menus.Button>
-            </Modal.Open> */}
+          <Modal.Open opens="delete">
+            <Menus.Button icon={<HiTrash />}>Delete booking</Menus.Button>
+          </Modal.Open> */}
         </Menus.MenuItems>
       </Menus.MenuWrapper>
 
