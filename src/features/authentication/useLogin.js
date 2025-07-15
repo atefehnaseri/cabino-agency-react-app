@@ -5,19 +5,15 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 import { login as loginApi } from "../../services/apiAuth";
-import { useEffect } from "react";
 
 export function useLogin() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const {
-    isPending: isLogingIn,
-    mutate: login,
-    data: user,
-  } = useMutation({
+  const { isPending: isLogingIn, mutate: login } = useMutation({
     mutationFn: ({ email, password }) => loginApi({ email, password }),
-    onSuccess: () => {
+    onSuccess: (user) => {
+      queryClient.setQueryData(["user"], user.user);
       navigate("/dashboard", { replace: true });
     },
     onError: (err) => {
@@ -25,11 +21,6 @@ export function useLogin() {
       console.log("Eror", err.message);
     },
   });
-
-  // //new version of ReactQuery is no longer support setQueryData directly in useMutation's event handlers
-  // useEffect(() => {
-  //   queryClient.setQueryData(["user"], user);
-  // }, [user, queryClient]);
 
   return { isLogingIn, login };
 }
