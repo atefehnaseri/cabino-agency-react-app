@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { useSignup } from "./useSignup";
 
 import Button from "../../ui/Button";
 import Form from "../../ui/Form";
@@ -8,12 +9,18 @@ import Input from "../../ui/Input";
 // Email regex: /\S+@\S+\.\S+/
 
 function SignupForm() {
-  const { handleSubmit, register, formState, getValues } = useForm();
+  const { handleSubmit, register, formState, getValues, reset } = useForm();
   const { errors } = formState;
 
-  const onSubmit = (data) => {
-    console.log("Form submitted with data:", data);
-    // handleSubmit(data)
+  const { signup, isPending } = useSignup();
+
+  const onSubmit = ({ fullName, email, password }) => {
+    signup(
+      { fullName, email, password },
+      {
+        onSettled: () => reset(),
+      }
+    );
   };
 
   return (
@@ -23,6 +30,7 @@ function SignupForm() {
           type="text"
           id="fullName"
           {...register("fullName", { required: "This field is required" })}
+          disabled={isPending}
         />
       </FormRow>
 
@@ -30,10 +38,11 @@ function SignupForm() {
         <Input
           type="email"
           id="email"
-          {...register("emai", {
+          {...register("email", {
             required: "This field is required",
             pattern: { value: /\S+@\S+\.\S+/, message: "Invalid email format" },
           })}
+          disabled={isPending}
         />
       </FormRow>
 
@@ -51,6 +60,7 @@ function SignupForm() {
               message: "Password must be a minimum of a 8 characters",
             },
           })}
+          disabled={isPending}
         />
       </FormRow>
 
@@ -64,15 +74,16 @@ function SignupForm() {
               getValues("password") === getValues("passwordConfirm") ||
               "Passwords do not match",
           })}
+          disabled={isPending}
         />
       </FormRow>
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset">
+        <Button variation="secondary" type="reset" disabled={isPending}>
           Cancel
         </Button>
-        <Button>Create new user</Button>
+        <Button disabled={isPending}>Create new user</Button>
       </FormRow>
     </Form>
   );
