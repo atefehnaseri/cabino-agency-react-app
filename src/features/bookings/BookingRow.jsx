@@ -19,6 +19,8 @@ import { formatCurrency } from "../../utils/helpers";
 import { formatDistanceFromNow } from "../../utils/helpers";
 import { useCheckout } from "../check-in-out/useCheckout";
 import { STATUS_TO_TAG_NAME } from "../../utils/constants";
+import { deleteBooking } from "../../services/apiBookings";
+import { useDeleteBooking } from "./useDeleteBooking";
 // import { useDeleteBooking } from "./useDeleteBooking";
 
 const Cabin = styled.div`
@@ -64,6 +66,7 @@ function BookingRow({
 }) {
   const navigate = useNavigate();
   const { isCheckingOut, checkout } = useCheckout();
+  const { isDeleting, deleteBooking } = useDeleteBooking();
 
   return (
     <Table.Row>
@@ -122,19 +125,19 @@ function BookingRow({
               </Menus.Button>
             )}
 
-            {/* <Modal.Open opens="delete">
-            <Menus.Button icon={<HiTrash />}>Delete booking</Menus.Button>
-          </Modal.Open> */}
+            <Modal.Opener opens="delete-booking">
+              <Menus.Button icon={<HiTrash />}>Delete booking</Menus.Button>
+            </Modal.Opener>
           </Menus.MenuItems>
         </Menus.MenuWrapper>
 
-        {/* <Modal.Window name="delete">
+        <Modal.Window name="delete-booking">
           <ConfirmDelete
             resourceName="booking"
             disabled={isDeleting}
             onConfirm={() => deleteBooking(bookingId)}
           />
-        </Modal.Window> */}
+        </Modal.Window>
       </Modal>
     </Table.Row>
   );
