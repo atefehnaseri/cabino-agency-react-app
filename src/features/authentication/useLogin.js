@@ -18,7 +18,7 @@ export function useLogin() {
   } = useMutation({
     mutationFn: ({ email, password }) => loginApi({ email, password }),
     onSuccess: () => {
-      navigate("/dashboard");
+      navigate("/dashboard", { replace: true });
     },
     onError: (err) => {
       toast.error("Provided email or password are incorrect");
@@ -26,10 +26,10 @@ export function useLogin() {
     },
   });
 
-  //new version of ReactQuery is no longer support setQueryData directly in useMutation's event handlers
-  useEffect(() => {
-    queryClient.setQueryData(["user"], user);
-  }, [user, queryClient]);
+  // //new version of ReactQuery is no longer support setQueryData directly in useMutation's event handlers
+  // useEffect(() => {
+  //   queryClient.setQueryData(["user"], user);
+  // }, [user, queryClient]);
 
   return { isLogingIn, login };
 }
