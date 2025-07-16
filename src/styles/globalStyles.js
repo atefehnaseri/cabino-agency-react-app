@@ -89,13 +89,15 @@ const GlobalStyles = createGlobalStyle`
 --image-opacity: 90%;
 
   }
-}
 
 
   --border-radius-tiny: 3px;
   --border-radius-sm: 5px;
   --border-radius-md: 7px;
   --border-radius-lg: 9px;
+}
+
+
 *,
 *::before,
 *::after {
@@ -109,6 +111,8 @@ const GlobalStyles = createGlobalStyle`
 
 html {
   font-size: 62.5%;
+
+  background-color: var(--color-grey-0);
 }
 
 body {
