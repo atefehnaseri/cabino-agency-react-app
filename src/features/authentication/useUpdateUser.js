@@ -8,12 +8,11 @@ export function useUpdateUser() {
   const { isPending, mutate: updateUser } = useMutation({
     mutationFn: updateUserApi,
     onSuccess: (data) => {
-      console.log(data);
       toast.success("User updated successfully");
       // Update the user in the query cache
       // This ensures that the user data is up-to-date across the application without any flash for refetching and immidiate ui update
       const user = data.user;
-      console.log(user);
+
       queryClient.setQueryData(["user"], user);
 
       // queryClient.invalidateQueries({ queryKey: ["user"] });

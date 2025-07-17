@@ -27,7 +27,7 @@ function CreateCabinForm() {
   });
 
   function onSubmit(data) {
-    console.log(data.image);
+    // console.log(data.image);
     //the file input will return an array containing file details
     mutate({ ...data, image: data.image[0] });
   }
