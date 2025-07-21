@@ -8,8 +8,8 @@ import Input from "../../ui/Input";
 import FormRowVertical from "../../ui/FormRowVertical";
 
 function LoginForm() {
-  const [email, setEmail] = useState("ati.test@yahoo.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const { isLogingIn, login } = useLogin();
 
