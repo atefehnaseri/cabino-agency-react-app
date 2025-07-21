@@ -90,6 +90,7 @@ function Toggler({ icon, id }) {
   const { openId, openMenu, closeMenu, setPosition } = useContext(MenuContext);
 
   function handleToggleMenu(e) {
+    e.stopPropagation();
     //get menuItems container position according to the position of toggler button
     const togglerBtnRect = e.target.closest("button").getBoundingClientRect();
 
@@ -107,7 +108,7 @@ function Toggler({ icon, id }) {
 
 function MenuItems({ children, id }) {
   const { openId, closeMenu, position } = useContext(MenuContext);
-  const { ref } = useOutsideClick(closeMenu);
+  const { ref } = useOutsideClick(closeMenu, false);
 
   if (openId !== id) return null;
 
