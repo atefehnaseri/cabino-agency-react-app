@@ -10,9 +10,9 @@ import Pagination from "../../ui/Pagination";
 function BookingTable() {
   const { isLoading, bookings, count } = useBookings();
 
-  if (!bookings?.length) return <Empty resourceName="bookings" />;
-
   if (isLoading) return <Spinner />;
+
+  if (!bookings.length) return <Empty resourceName="bookings" />;
 
   return (
     <Menus>
