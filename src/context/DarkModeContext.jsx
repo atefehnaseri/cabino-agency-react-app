@@ -5,7 +5,13 @@ import { is } from "date-fns/locale";
 const DarkModeContext = createContext();
 
 function DarkModeProvider({ children }) {
-  const [isDarkMode, setIsDarkMode] = useLocalStorageState(false, "isDarkMode");
+  console.log(window.matchMedia("(prefers-color-scheme: dark)").matches);
+  const initialTHeme =
+    window.matchMedia("(prefers-color-scheme: dark)").matches || false;
+  const [isDarkMode, setIsDarkMode] = useLocalStorageState(
+    initialTHeme,
+    "isDarkMode"
+  );
 
   function toggleDarkMode() {
     setIsDarkMode((prevMode) => !prevMode);
